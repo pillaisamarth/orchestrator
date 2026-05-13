@@ -1,6 +1,0 @@
-[submodule "pmt-svc"]
-	path = pmt-svc
-	url = ../pmt-svc.git
-[submodule "simple-kafka-order"]
-	path = simple-kafka-order
-	url = ../simple-kafka-order.git
