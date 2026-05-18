@@ -74,7 +74,7 @@ curl -X GET http://localhost:8082/stats/dlt -H "Content-Type: application/json"
 
 ## Tradeoffs
 - Chose at-least-once delivery with idempotency over exactly once
-- In-memory structures used for demo
+- Rate limiting and idempotency are currently in-memory for demo purpose. These would be moved to Redis for distributed state across multiple instances
 
 ## Stack
 - Spring Boot + Java
