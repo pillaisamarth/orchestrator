@@ -1,5 +1,6 @@
 package com.sp.pmt_svc.handlers;
 
+import com.sp.pmt_svc.context.StatContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.kafka.autoconfigure.KafkaProperties;
 import org.springframework.context.annotation.Bean;
@@ -8,6 +9,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.listener.ConsumerAwareListenerErrorHandler;
 import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
 import org.springframework.kafka.listener.DefaultErrorHandler;
+import org.springframework.kafka.listener.RetryListener;
 import org.springframework.util.backoff.BackOff;
 import org.springframework.util.backoff.FixedBackOff;
 
@@ -33,10 +35,13 @@ public class KafkaErrorHandlerConfig {
     //this error handler is invoked when error is thrown to kafka listernr contianer
     //default dead-letter topic is original topic + "-dlt"
     @Bean
-    public DefaultErrorHandler defaultErrorHandler(KafkaTemplate<Object, Object> template){
+    public DefaultErrorHandler defaultErrorHandler(KafkaTemplate<Object, Object> template, RetryListener retryListener){
         DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(template);
         BackOff backOff = new FixedBackOff(3000L, 2L);
+        DefaultErrorHandler defaultErrorHandler = new DefaultErrorHandler(recoverer, backOff);
+        defaultErrorHandler.setRetryListeners(retryListener);
 
-        return new DefaultErrorHandler(recoverer, backOff);
+        return defaultErrorHandler;
     }
+
 }
