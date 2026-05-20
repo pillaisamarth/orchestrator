@@ -1,6 +1,6 @@
 # Event-Driven Order Processing System
 
-A distributed microservices demo build with Spring boot and Kafka, demonstrating event driven architecture and resilience.
+A distributed microservices demo built with Spring boot and Kafka, demonstrating event driven architecture and resilience.
 
 ## Architecture
 
