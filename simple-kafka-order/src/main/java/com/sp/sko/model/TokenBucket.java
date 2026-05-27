@@ -1,12 +1,19 @@
 package com.sp.sko.model;
 
-public class TokenBucket {
+import org.springframework.data.redis.core.RedisHash;
+
+import java.io.Serializable;
+
+@RedisHash("tokenBucket")
+public class TokenBucket implements Serializable {
+    private final String id;
     private final long capacity;
     private double availableTokens;
     private long lastRefillMillis;
     private final double refillTokenPerMillis;
 
-    public TokenBucket(long capacity, long refillTokens, long refillPeriodMillis){
+    public TokenBucket(String id, long capacity, long refillTokens, long refillPeriodMillis){
+        this.id = id;
         this.capacity = capacity;
         availableTokens = capacity;
         lastRefillMillis = System.currentTimeMillis();
