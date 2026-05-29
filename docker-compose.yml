@@ -18,11 +18,22 @@ services:
       - "8080:8080"
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      REDIS_HOST: redis-server
+      REDIS_PORT: 6379
     depends_on:
       - kafka
+      - redis-server
     networks:
       - app-net
     restart: on-failure
+
+  redis-server:
+    image: redis:7-alpine
+    container_name: redis-server-container
+    ports:
+      - "6379:6379"
+    networks:
+      - app-net
 
   kafka:
     image: apache/kafka:4.2.0
