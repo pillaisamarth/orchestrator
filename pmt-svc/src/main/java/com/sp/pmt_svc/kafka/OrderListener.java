@@ -2,6 +2,7 @@ package com.sp.pmt_svc.kafka;
 
 import com.sp.pmt_svc.context.StatContext;
 import com.sp.pmt_svc.model.OrderEvent;
+import com.sp.pmt_svc.service.IdempotentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -17,6 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 @Slf4j
 public class OrderListener {
+    private final IdempotentService idempotentService;
     private final Map<String, Boolean> processedOrderIds = new ConcurrentHashMap<>();
     private final JsonMapper jsonMapper;
 
@@ -33,8 +35,9 @@ public class OrderListener {
         OrderEvent event = jsonMapper.readValue(message, OrderEvent.class);
         String orderId = event.orderId();
 
-        Boolean processed = processedOrderIds.putIfAbsent(orderId, true);
-        if(processed != null){
+        Boolean alreadyProcessed = idempotentService.isDuplicateAndStore(orderId);
+
+        if(alreadyProcessed){
             StatContext.numDuplicateOrder.incrementAndGet();
             log.info("Skipping duplicate orderId: {}", orderId);
             return;
