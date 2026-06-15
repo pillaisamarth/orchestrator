@@ -19,7 +19,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class OrderListener {
     private final IdempotentService idempotentService;
-    private final Map<String, Boolean> processedOrderIds = new ConcurrentHashMap<>();
     private final JsonMapper jsonMapper;
 
     @KafkaListener(topics = "order-placed", errorHandler = "customErrorHandler", concurrency = "3")

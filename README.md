@@ -79,12 +79,19 @@ curl -X GET http://localhost:8082/stats/dlt -H "Content-Type: application/json"
 Retry attempts are properly handled in retry listener so that the `received` count reflects genuine new
 messages rather than redeliveries. This gives more accurate visibility into the actual load on the system.
 
+## Redis Usage
+- We use redis as a cache (since we evict entries after 24H) to check for duplicate order ids.
+- We also use redis to store the token bucket state for rate limiting, which allows us to maintain a distributed state across multiple instance of application.
+- Note: We're yet to make the redis operations atomic for rate limiting.
+
 ## Tradeoffs
 - Chose at-least-once delivery with idempotency over exactly once
-- Rate limiting and idempotency are currently in-memory for demo purpose. These would be moved to Redis for distributed state across multiple instances
+- ~~Rate limiting and idempotency are currently in-memory for demo purpose. These would be moved to Redis for distributed state across multiple instances~~
+- Update : Redis is now used for rate limiting and idempotency to support distributed instances.
 
 ## Stack
 - Spring Boot + Java
 - Apache Kafka
+- Redis (for rate limiting and idempotency)
 - Docker + Docker compose
 - Maven
