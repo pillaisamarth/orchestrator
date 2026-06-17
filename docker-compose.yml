@@ -15,6 +15,21 @@ services:
       - app-net
     restart: on-failure
 
+  pmt-svc-2:
+    build: ./pmt-svc
+    ports:
+      - "8081:8082"
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      REDIS_HOST: redis-server
+      REDIS_PORT: 6379
+    depends_on:
+      - kafka
+      - redis-server
+    networks:
+      - app-net
+    restart: on-failure
+
   sko:
     build: ./simple-kafka-order
     ports:

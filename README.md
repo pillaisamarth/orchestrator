@@ -95,3 +95,7 @@ messages rather than redeliveries. This gives more accurate visibility into the 
 - Redis (for rate limiting and idempotency)
 - Docker + Docker compose
 - Maven
+
+
+## TODO
+- Avoid in memory metrics to support distributed instances
